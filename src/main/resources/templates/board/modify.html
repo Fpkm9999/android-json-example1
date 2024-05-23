@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Modify</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Modify
+                </div>
+                <div class="card-body">
+                    <!--                    -->
+                    <form>
+                        <!-- 폼 태그에 제목 title, 내용 contents 을 수정 할 수 있도록 작성하고 전송할때 필요한 name 속성을 확인 -->
+                        <div class="card-body">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Bno</span>
+                                <input type="text" class="form-control" th:value="${dto.bno}" readonly
+                                       name="bno"
+                                >
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Title</span>
+                                <input type="text" class="form-control"
+                                       th:value="${dto.title}" readonly
+                                       name="title"
+                                >
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Content</span>
+                                <textarea class="form-control col-sm-5" rows="5"
+                                          name="content">[[${dto.content}]]</textarea>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Writer</span>
+                                <input type="text" class="form-control"
+                                       th:value="${dto.writer}" name="writer">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">RegDate</span>
+                                <input type="text" class="form-control"
+                                       th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly
+                                       name="regDate"
+                                >
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">ModDate</span>
+                                <input type="text" class="form-control"
+                                       th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}" readonly
+                                       name="modDate"
+                                >
+                            </div>
+
+                            <div class="my-4">
+                                <div class="float-end">
+                                    <button type="button" class="btn btn-primary listBtn">List</button>
+                                    <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!--                    -->
+                </div> <!-- end card body -->
+            </div> <!-- end card -->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div> <!-- end layout:fragment -->
+
+<!--<script>-->
+<!--    const link = [[${pageRequestDTO.getLink()}]];-->
+<!--    const formObj = document.querySelector("form");-->
+
+<!--    document.addEventListener('DOMContentLoaded', () => {-->
+
+<!--        document.querySelector(".modBtn").addEventListener("click", function (e) {-->
+<!--            console.log("modBtn Test...")-->
+<!--            e.preventDefault();-->
+<!--            e.stopPropagation();-->
+
+<!--            formObj.action = `/board/modify?${link}`;-->
+<!--            formObj.method = 'post';-->
+<!--            formObj.submit();-->
+<!--        }, false);-->
+<!--    })-->
+<!--</script>-->
+
+<script layout:fragment="script" th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        const link = [[${pageRequestDTO.getLink()}]];
+        const formObj = document.querySelector("form");
+
+
+        document.querySelector(".modBtn").addEventListener("click", function (e) {
+            console.log("modBtn Test...")
+            e.preventDefault();
+            e.stopPropagation();
+
+            formObj.action = `/board/modify?${link}`;
+            formObj.method = 'post';
+            formObj.submit();
+        }, false);
+
+        document.querySelector(".removeBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            formObj.action = `/board/remove`;
+            formObj.method = 'post';
+            formObj.submit();
+        }, false);
+
+
+        /*@Valid 유효성 검사처리*/
+
+        // 에러메세지 띄우기
+        const errors = [[${errors}]];
+        console.log(errors);
+        let errorMsg = '';
+
+        if (errors) {
+            for (let i = 0; i < errors.length; i++) {
+                errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`;
+            }
+            alert(errorMsg)
+        }
+    })
+</script>
+
+</body>
+</html>
